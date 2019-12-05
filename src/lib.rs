@@ -7,8 +7,19 @@ macro_rules! tuple {
 
     () => { tuple!(()) };
 
-    ($value:expr, $($tree:tt),*) => {
-        Tuple($value, tuple!($($tree),*))
+    ($value:expr, $($other:expr),*) => {
+        Tuple($value, tuple!($($other),*))
+    };
+}
+
+#[macro_export]
+macro_rules! tuple_ty {
+    ($value:ty) => { Tuple<$value, ()> };
+
+    () => { tuple_ty!(()) };
+
+    ($value:ty, $($other:ty),*) => {
+        Tuple<$value, tuple_ty!($($other),*)>
     };
 }
 
@@ -18,9 +29,9 @@ pub mod tests {
 
     #[test]
     fn assert_debug() {
-        let a = tuple!();
-        let b = tuple!(true);
-        let c = tuple!(1, "two", 3.0, false);
+        let a: tuple_ty!() = tuple!();
+        let b: tuple_ty!(bool) = tuple!(true);
+        let c: tuple_ty!(usize, &str, f32, bool) = tuple!(1, "two", 3.0, false);
 
         assert_eq!(format!("{:?}", a), "Tuple((), ())");
         assert_eq!(format!("{:?}", b), "Tuple(true, ())");
