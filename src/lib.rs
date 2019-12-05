@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Tuple<A, B>(pub A, pub B);
 
 #[macro_export]
